@@ -12,7 +12,43 @@ bookmarksRouter
     res.json(bookmark);
   })
   .post(bodyParser, (req, res) => {
+    const { title, url, description, rating} = req.body;
+    if (!title) {
+      logger.error(`Title is required`);
+      return res.status(400).send("Invalid data");
+    }
 
+    if (!url) {
+      logger.error(`url is required`);
+      return res.status(400).send("Invalid data");
+    }
+
+    if (!description) {
+      logger.error(`Description is required`);
+      return res.status(400).send("Invalid data");
+    }
+
+    if (!rating) {
+      logger.error(`Rating is required`);
+      return res.status(400).send("Invalid data");
+    }
+
+    const id = uuid();
+
+    const bookmarks = {
+      id,
+      title,
+      url,
+      description,
+      rating
+    };
+
+    logger.info(`Bookmark with id ${id} created`);
+
+    res
+      .status(201)
+      .location(`http://localhost:8000/bookmarks/${id}`)
+      .json(bookmarks)
   })
 
   bookmarksRouter
